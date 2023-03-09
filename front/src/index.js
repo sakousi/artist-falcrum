@@ -6,6 +6,13 @@ import App from './App';
 import Login from './router/Login';
 import Register from './router/Register';
 
+import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client"
+
+ const client = new ApolloClient({
+  uri: '/graphql',
+  cache: new InMemoryCache()
+}); 
+
 const container = document.getElementById('root');
 const root = ReactDOM.createRoot(container);
 
@@ -28,6 +35,8 @@ const router = createBrowserRouter([
 root.render(
   <StrictMode>
     <ColorModeScript />
+    <ApolloProvider client={client}>
     <RouterProvider router={router}/>
+    </ApolloProvider>
   </StrictMode>
 );

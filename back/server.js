@@ -1,5 +1,6 @@
 const express = require('express');
 const session = require('express-session');
+const { buildContext } = require('graphql-passport');
 const { graphqlHTTP } = require('express-graphql');
 const { buildSchema } = require('graphql');
 const cors = require('cors');
@@ -13,13 +14,6 @@ const models = require('./models');
 const SESSION_SECRECT = 'bad secret';
 const typeDefs = require('./schema');
 const resolvers = require('./resolvers');
-
-// The root provides a resolver function for each API endpoint
-var root = {
-  hello: () => {
-    return 'Hello world!';
-  },
-};
 
 let app = express();
 
@@ -46,7 +40,7 @@ app.use(cors(corsOptions));
     //cookie: {path:"/", secure: true }
   }));
 
-  context: ({ req, res }) => buildContext({ req, res, models }),
+  //context: ({ req, res }) => buildContext({ req, res, models }),
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -73,6 +67,10 @@ const server = new ApolloServer({ typeDefs,
 models.sequelize.authenticate();
 models.sequelize.sync();
 
+let {dataInit} = require('./datainit.js');
+dataInit();
+
+server.start().then(() => {
 server.applyMiddleware({ app, cors: false });
  if (process.env.NODE_ENV === 'production') {
   // Serve any static files
@@ -82,5 +80,5 @@ server.applyMiddleware({ app, cors: false });
     res.sendFile(path.join(__dirname, '../front/build', 'index.html'));
   });
 } 
-
+});
 app.listen(PORT, console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}   ${server.graphqlPath}`))

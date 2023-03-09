@@ -9,7 +9,7 @@ function Navigation() {
     <nav>
         <Flex>
             <Box>
-                <img src=""/>
+                <img src="" alt=""/>
             </Box>
             <List display="flex">
                 <ListItem>

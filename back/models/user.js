@@ -11,6 +11,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {      
       // define association here
+      User.hasMany(models.Post, {allowNull: false});
+      User.hasMany(models.Comment, {allowNull: false});
+      User.hasMany(models.Like, {allowNull: false});
+      User.hasMany(models.Category, {allowNull: false});
+      User.hasMany(models.UserBadge, {allowNull: false});
     }
   };
   User.init({
@@ -30,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           notNull: { args: true, msg: "You must enter Phone Number" },
-          len: { args: [11,11], msg: 'Phone Number is invalid' },
+          len: { args: [10, 10], msg: 'Phone Number is invalid' },
           isInt: { args: true, msg: "You must enter Phone Number" },
         }
     },
