@@ -1,25 +1,24 @@
-import React, { Fragment } from 'react';
-import {
-  ChakraProvider,
-  Box,
-  Grid,
-  theme,
-} from '@chakra-ui/react';
-import { ColorModeSwitcher } from './ColorModeSwitcher';
-import Navigation from './Navigation';
+import React from "react";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import Home from "./router/Home";
+import Login from "./router/Login";
+import LoginRedirect from "./router/LoginRedirect";
+import Register from "./router/Register";
 
-function App() {
-  return (
-    <ChakraProvider theme={theme}>
-      <Box textAlign="center" fontSize="xl">
-        <Grid minH="100vh" p={3}>
-          <Navigation justifySelf="flex-start"/>
-          <ColorModeSwitcher justifySelf="flex-end" />
-        </Grid>
-      </Box>
-    </ChakraProvider>
-  );
+
+class App extends React.Component {
+  render() {
+    return (
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home/>} />
+          <Route path="/login" element={<Login/>} />
+          <Route path="/register" element={<Register/>} />
+          <Route path="/redirectLogin" element={<LoginRedirect/>} />
+        </Routes>
+      </BrowserRouter>
+    );
+  }
 }
 
-export default App;
-
+export default App

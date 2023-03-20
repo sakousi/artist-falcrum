@@ -1,12 +1,9 @@
-import { ColorModeScript } from '@chakra-ui/react';
+import { ChakraProvider, ColorModeScript, theme } from '@chakra-ui/react';
 import React, { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import App from './App';
-import Login from './router/Login';
-import Register from './router/Register';
-
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client"
+import CurrentUserProvider from './CurrentUserContext';
 
  const client = new ApolloClient({
   uri: '/graphql',
@@ -14,29 +11,18 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client"
 }); 
 
 const container = document.getElementById('root');
+
 const root = ReactDOM.createRoot(container);
-
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <App />,
-  },
-  {
-    path: '/login',
-    element: <Login />,
-  },
-  {
-    path: '/register',
-    element: <Register />,
-  }
-
-])
 
 root.render(
   <StrictMode>
     <ColorModeScript />
-    <ApolloProvider client={client}>
-    <RouterProvider router={router}/>
-    </ApolloProvider>
+      <ChakraProvider theme={theme}>
+        <ApolloProvider client={client}>
+          <CurrentUserProvider>
+            <App client={client}/>
+          </CurrentUserProvider>
+        </ApolloProvider>
+      </ChakraProvider>
   </StrictMode>
 );

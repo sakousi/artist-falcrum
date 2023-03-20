@@ -23,7 +23,6 @@ module.exports = (sequelize, DataTypes) => {
     email: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
         validate: {
             isEmail: {
                 msg: 'Must be a valid email address'
@@ -45,8 +44,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-            notNull: { args: true, msg: "You must enter Password" },
-            len: { args: [8,20], msg: 'Password must be between 8 and 20 characters' },
+            notNull: { args: true, msg: "You must enter Password" }
         }
     }
   }, {

@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-
   "scripts": {
     "back": "nodemon ./back/server.js",
     "front": "npm start --prefix front",
@@ -13,6 +12,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "concurrently": "^7.6.0"
-  }
+    "argon2": "^0.30.3",
+    "concurrently": "^7.6.0",
+    "graphql-passport": "^0.6.5",
+    "passport": "^0.6.0"
+  },
+  "proxy": "http://localhost:5006"
 }
