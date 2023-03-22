@@ -28,25 +28,25 @@ let posts = [
     {
         title: "Post 1",
         content: "Content 1",
-        media: "https://picsum.photos/200/300",
+        media: "adrianna-geo-1rBg5YSi00c-unsplash.jpg",
         UserId: 9
     },
     {
         title: "Post 2",
         content: "Content 2",
-        media: "https://picsum.photos/200/300",
+        media: "anna-kolosyuk-D5nh6mCW52c-unsplash.jpg",
         UserId: 9
     },
     {
         title: "Post 3",
         content: "Content 3",
-        media: "https://picsum.photos/200/300",
+        media: "axel-ruffini-iulnjpZyWnc-unsplash.jpg",
         UserId: 8
     },
     {
         title: "Post 4",
         content: "Content 4",
-        media: "https://picsum.photos/200/300",
+        media: "dan-farrell-fT49QnFucQ8-unsplash.jpg",
         UserId: 9
     },
 

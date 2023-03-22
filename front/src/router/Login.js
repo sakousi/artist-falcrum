@@ -4,7 +4,7 @@ import { gql, useMutation, useQuery } from "@apollo/client";
 import { LOGIN } from "../graphql/mutations";
 import { CURRENT_USER } from "../graphql/queries";
 import Navigation from "./component/Navigation";
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Button, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
@@ -28,7 +28,7 @@ function Login() {
     <Box h='100vh'>
       <Navigation/>
       <Box w='full' h='max-content' display='flex' justifyContent='center' alignItems='center'>
-        <Box >
+        <Box borderRadius='.25rem' display='flex' flexDirection="column" alignItems='center' mt='5rem' p='1rem' w='35%' backgroundColor='#EEEEEE'>
         <Text as='h1' fontFamily='Poppins' fontSize='2rem'>Login</Text>
         <Text as='h2'>Welcome back dear artist</Text>
         <form onSubmit={e => {
@@ -48,7 +48,7 @@ function Login() {
             <label htmlFor="password">Password:</label>
             <input type="password" name="password" id="password" placeholder="password" />
           </Box>
-          <button type="submit">Login</button>
+          <Button backgroundColor='#FFFFFF' type="submit">Login</Button>
         </form>
         </Box>
       </Box>

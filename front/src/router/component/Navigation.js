@@ -22,9 +22,9 @@ function Navigation() {
     }, [colorMode]);
 
     return (
-        <Box as='nav' h='4rem' display="flex" alignItems='center' justifyContent="space-between">
+        <Box as='nav' backgroundColor="#7F9900" color='#FFFFFF' h='4rem' display="flex" alignItems='center' justifyContent="space-between" pr='.5rem'>
             <Link p='.5rem' h='full' minW='fit-content' href="/">
-                <Image h='full' src={darkMode ? logoDark : logo} alt="je suis le logo lelolel"/>
+                <Image h='full' src={/*darkMode ? logoDark : logo*/ logoDark} alt="je suis le logo lelolel"/>
             </Link>
             <List display="flex" gap='3' alignItems='center'>
                 <ListItem>
@@ -33,9 +33,9 @@ function Navigation() {
                 <ListItem>
                     <a href="/register">Register</a>
                 </ListItem>
-                <ListItem>
+                {/* <ListItem>
                     <ColorModeSwitcher/>
-                </ListItem>
+                </ListItem> */}
             </List>
         </Box>
     );
