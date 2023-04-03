@@ -1,52 +1,27 @@
-const express = require('express');
-const session = require('express-session');
-const { graphqlHTTP } = require('express-graphql');
+const express = require('express');const { graphqlHTTP } = require('express-graphql');
 const cookieParser = require('cookie-parser');
+const dotenv = require('dotenv');
 
 const { ApolloServer } = require('apollo-server-express');
 const typeDefs = require('./schema');
 const resolvers = require('./resolvers');
 const models = require('./models');
 
-const passport = require('passport');
-const { buildContext } = require('graphql-passport');
-let { initPassport } = require('./initPassport');
 
 const cors = require('cors');
 
 const PORT = process.env.PORT || 5006
 
-const SESSION_SECRET = 'bad secret';
-
-
-initPassport(models.User, models);
+dotenv.config();
 let app = express();
+
+app.set('trust proxy', process.env.NODE_ENV !== 'production')
 
 app.use(cors({
   credentials: true,
 }));
 
-let SequelizeStore = require("connect-session-sequelize")(session.Store);
-
-app.use(session({
-  store: new SequelizeStore({ db :models.sequelize }),
-  secret: SESSION_SECRET,
-  resave: false,
-  saveUninitialized: false,
-  name: 'sid',
-  cookie: {
-    maxAge: 7200000, // 2h of livetime
-    sameSite: true,
-    secure: false,
-  },
-  // use secure cookies for production meaning they will only be sent via https
-  //cookie: {path:"/", secure: true }
-}));
-
-//context: ({ req, res }) => buildContext({ req, res, models }),
-
-app.use(passport.initialize());
-app.use(passport.session());
+app.use(cookieParser());
 const server = new ApolloServer({
   typeDefs,
   resolvers,
@@ -62,8 +37,10 @@ const server = new ApolloServer({
     // be manipulated in other ways, so long as it's returned.
     return err;
   },
-  playground: true, tracing: true, 
-  context: ({ req, res }) => buildContext({ req, res, models }), playground: {
+  playground: true, 
+  tracing: true, 
+  context: ({ req, res }) => ({ req, res, models }),
+  playground: {
     settings: {
       'request.credentials': 'same-origin',
     },
@@ -97,4 +74,5 @@ if (process.env.NODE_ENV === 'production') {
     res.sendFile(path.join(__dirname, '../front/build', 'index.html'));
   });
 }
-  app.listen(PORT, console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}   ${server.graphqlPath}`))
+
+app.listen(PORT, console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT} ${server.graphqlPath}`))

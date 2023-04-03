@@ -1,9 +1,8 @@
 import React, { Fragment, useContext } from 'react';
 import Navigation from './component/Navigation';
 import { Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Card, CardBody, CardFooter, CardHeader, Heading, Image, Text } from '@chakra-ui/react';
-import { CurrentUserContext } from '../CurrentUserContext';
-import { gql, useQuery } from '@apollo/client';
-import { POSTS } from '../graphql/queries';
+import { gql, useLazyQuery, useQuery } from '@apollo/client';
+import { POSTS, CURRENT_USER } from '../graphql/queries';
 
 function importAll(r) {
   let images = {};
@@ -14,24 +13,23 @@ function importAll(r) {
 const images = importAll(require.context('../assets/img/posts', false, /\.(png|jpe?g|svg)$/));
 
 function Home() {
-  const {currentUser} = useContext(CurrentUserContext);
-  console.log(currentUser);
 
-  const { data, loading, error } = useQuery(POSTS, {
-    fetchPolicy: "cache-and-network",
-  });
+  const { loading: loadingCurrentUser, error: errorCurrentUser, data: dataCurrentUser } = useQuery(CURRENT_USER);
+  const { loading: loadingPost, error: errorPost, data: dataPost, } = useQuery(POSTS);
 
-  if (loading) return <p>LOADING</p>;
-  if (error) {
-    throw new Error(error);
-    };
+  if (loadingCurrentUser || loadingPost) return <p>Loading...</p>;
+  if (errorPost) return <p>Error p</p>;
+  if (errorCurrentUser) return <p>Error c</p>;
 
-  const posts = data.getPosts;
+  const posts = dataPost.getPosts;
+  const currentUser = dataCurrentUser.currentUser;
+
   console.log(posts);
+  console.log(currentUser);
 
   return (
     <Fragment>
-      <Navigation justifySelf="flex-start"/>
+      <Navigation justifySelf="flex-start" connected={currentUser.id?true:false}/>
       <Box w='full' display='flex' flexDirection='column' alignItems='center'>
         <Box w='full' display='flex' justifyContent='flex-end' maxW='4xl' py='10'>
           <Breadcrumb color='#3A5A72'>
@@ -44,8 +42,8 @@ function Home() {
             </BreadcrumbItem>
           </Breadcrumb>
         </Box>
-        {posts.map((post) => (
-        <Card backgroundColor='#EEEEEE' w='lg' mb={10}>
+        {posts.map((post, key) => (
+        <Card key={key} backgroundColor='#EEEEEE' w='lg' mb={10}>
           <CardHeader>
             <Heading color='#3A5A72'>{post.title}</Heading>
           </CardHeader>

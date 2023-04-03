@@ -2,7 +2,6 @@ import React, { Fragment } from "react";
 
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { LOGIN } from "../graphql/mutations";
-import { CURRENT_USER } from "../graphql/queries";
 import Navigation from "./component/Navigation";
 import { Box, Button, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
@@ -12,15 +11,11 @@ function Login() {
   const [login] = useMutation(LOGIN, {
     update(cache, { data: { login } }) {
       console.log(login);
-      cache.writeQuery({
-        query: CURRENT_USER,
-        data: { currentUser: login.user },
-      });
     },
     onCompleted(data) {
       localStorage.setItem("isConnected", true);
       console.log(data);
-      navigate("/redirectLogin");
+      navigate("/");
     }
   });
 

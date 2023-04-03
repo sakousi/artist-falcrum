@@ -14,7 +14,7 @@ const typeDefs = gql`
 
     type Mutation {
         logout: Boolean
-        login(email: String!, password: String!): AuthPayload
+        login(email: String!, password: String!): User
 
         getUser(name: String!): User
         createUser(pseudo: String!, email: String!, phone: String, firstname: String, lastname: String, password: String!): User
@@ -32,10 +32,6 @@ const typeDefs = gql`
         createLike(userId: Int!, postId: Int!, commentId: Int!): Like
         updateLike(id: Int!, userId: Int!, postId: Int!, commentId: Int!): Like
         deleteLike(id: Int!): Like
-    }
-
-    type AuthPayload {
-        user: User
     }
 
     type User {

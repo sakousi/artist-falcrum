@@ -1,14 +1,28 @@
 const argon2 = require("argon2");
+const jwt = require("jsonwebtoken");
 
-async function generateSalt() {
-    const salt = await argon2.generateSalt();
-    return salt;
-}
+
+require("dotenv").config();
+console.log(process.env.SECRET_KEY, 'hi');
 
 
 const resolvers = {
     Query: {
-        currentUser: (parent, args, context) => {context.getUser()},
+        currentUser: (parent, args, {req, res, models}) => {
+            const token = req.cookies['token']
+            if (!token) {
+                return null
+            }
+            try {
+                const {userId} = jwt.verify(token, process.env.SECRET_KEY)
+                const user = models.User.findByPk(userId)
+                console.log(user)
+                return user
+            } catch (err) {
+                console.log(err)
+                return null
+            }
+        },
 
         async user(root, { id }, { models }) {
             return await models.User.findByPk(id);
@@ -118,11 +132,22 @@ const resolvers = {
         },
 
         async login(root, { email, password }, context) {
-            const { user } = await context.authenticate('graphql-local', {email, password});
-            console.log(user);
-            context.login(user);
-            return { user };
+            let user = await context.models.User.findOne({ where: { email } });
+            if (!user) {
+                throw new Error("No user with that email");
+            }
+            let valid = await argon2.verify(user.password, password);
+            if (!valid) {
+                throw new Error("Incorrect password");
+            }
+            let token = jwt.sign({ userId: user.id }, process.env.SECRET_KEY);
+            context.res.cookie("token", token, { 
+                httpOnly: true,
+                maxAge: 2 * 60 * 60 * 1000 // 2 hours cookie
+            });
+            return user;
         },
+
         async logout(parent, args, context) {
             context.logout();
             return true;
