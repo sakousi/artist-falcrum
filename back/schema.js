@@ -8,15 +8,16 @@ const typeDefs = gql`
         users: [User!]!
         getUser(name: String!): User
 
-        getPost(id: Int!): Post
+        getPost(id: Int!): Post!
         getPosts: [Post!]!
+
+        getLikes(postId: Int, commentId: Int): [Like!]!
     }
 
     type Mutation {
         logout: Boolean
         login(email: String!, password: String!): User
 
-        getUser(name: String!): User
         createUser(pseudo: String!, email: String!, phone: String, firstname: String, lastname: String, password: String!): User
         updateUser(id: Int!, pseudo: String!, email: String!, phone: String!, firstname: String!, lastname: String!, password: String!): User
         deleteUser(id: Int!): User
@@ -29,8 +30,8 @@ const typeDefs = gql`
         updateComment(id: Int!, content: String!, userId: Int!, postId: Int!): Comment
         deleteComment(id: Int!): Comment
 
-        createLike(userId: Int!, postId: Int!, commentId: Int!): Like
-        updateLike(id: Int!, userId: Int!, postId: Int!, commentId: Int!): Like
+        createLike(userId: Int!, postId: Int, commentId: Int): Like
+        updateLike(id: Int!, userId: Int!, postId: Int, commentId: Int): Like
         deleteLike(id: Int!): Like
     }
 
@@ -68,6 +69,8 @@ const typeDefs = gql`
     type Like {
         id: Int!
         user: User!
+        post: Post
+        comment: Comment
         createdAt: String!
     }
 

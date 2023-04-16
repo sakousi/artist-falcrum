@@ -22,7 +22,7 @@ function Navigation({connected}) {
     }, [colorMode]);
     console.log(connected)
     return (
-        <Box as='nav' backgroundColor="#7F9900" color='#FFFFFF' h='4rem' display="flex" alignItems='center' justifyContent="space-between" pr='.5rem'>
+        <Box as='nav' backgroundColor="#83a697" color='#FFFFFF' h='4rem' display="flex" alignItems='center' justifyContent="space-between" pr='.5rem'>
             <Link p='.5rem' h='full' minW='fit-content' href="/">
                 <Image h='full' src={/*darkMode ? logoDark : logo*/ logoDark} alt="je suis le logo lelolel"/>
             </Link>

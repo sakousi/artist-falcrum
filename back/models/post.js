@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {      
       // define association here
         Post.belongsTo(models.User, {allowNull: false});
-        Post.hasMany(models.Comment, {allowNull: false});
+        Post.hasMany(models.Comment, {allowNull: true});
         Post.hasMany(models.Like);
         Post.hasMany(models.Category);
     }

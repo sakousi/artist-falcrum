@@ -27,3 +27,11 @@ export const LOGOUT = gql`
         logout
     }
 `;
+
+export const CREATE_LIKE = gql`
+    mutation createLike($userId: Int!, $postId: Int, $commentId: Int) {
+        createLike(userId: $userId, postId: $postId, commentId: $commentId) {
+            id
+        }
+    }
+`;

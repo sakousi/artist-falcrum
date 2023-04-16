@@ -1,9 +1,20 @@
 import { Box, Button, Text } from "@chakra-ui/react";
 import React from "react";
 import Navigation from "./component/Navigation";
+import { useMutation } from "@apollo/client";
+import { REGISTER } from "../graphql/mutations";
+import { useNavigate } from "react-router-dom";
 
 function Register() {
-
+  const navigate = useNavigate();
+  const [register] = useMutation(REGISTER, {
+    update(cache, {data: register}){
+      console.log(register)
+    },
+    onCompleted(data) {
+      navigate("/login");
+    }
+  });
   return (
     <Box h='100vh'>
       <Navigation/>

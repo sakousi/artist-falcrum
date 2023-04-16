@@ -1,26 +1,19 @@
 const argon2 = require("argon2");
 const jwt = require("jsonwebtoken");
 
-
 require("dotenv").config();
 console.log(process.env.SECRET_KEY, 'hi');
 
-
 const resolvers = {
     Query: {
-        currentUser: (parent, args, {req, res, models}) => {
+        async currentUser(parent, args, {req, res, models}) {
             const token = req.cookies['token']
-            if (!token) {
-                return null
-            }
-            try {
-                const {userId} = jwt.verify(token, process.env.SECRET_KEY)
-                const user = models.User.findByPk(userId)
-                console.log(user)
-                return user
-            } catch (err) {
-                console.log(err)
-                return null
+            if (token) {
+                const session = await models.Session.findByPk(token);
+                if (session) {
+                    const user = await models.User.findByPk(jwt.verify(token, process.env.SECRET_KEY).userId);
+                    return user;
+                }
             }
         },
 
@@ -31,23 +24,34 @@ const resolvers = {
             return await models.User.findAll();
         },
         async getUser(root, { name }, { models }) {
-            return await models.User.findOne({ where: { username: name } });
+            return await models.User.findOne({ where: { pseudo: name } });
         },
         
-        getPosts: async (parent, args, { models }) => {
+        async getPosts(parent, args, { models }){
             return await models.Post.findAll();
+        },
+
+        async getLikes (parent, { postId, commentId }, { models }){
+            console.log(postId, commentId);
+            if (postId)
+                return await models.Like.findAll({ where: { postId } });
+            else if (commentId)
+                return await models.Like.findAll({ where: { commentId } });
         },
     },
 
 
     Mutation: {
 
-        async createUser(root, { pseudo, email, password }, { models }) {
+        async createUser(root, { pseudo, email, password, firstname, lastname, phone }, { models }) {
             return argon2.hash(password).then(hash => {
                 return models.User.create({
                     pseudo,
                     email,
                     password: hash,
+                    firstname,
+                    lastname,
+                    phone,
                 });
             });
         },
@@ -131,6 +135,14 @@ const resolvers = {
             });
         },
 
+        async createLike(root, { userId, postId, commentId }, { models }) {
+            return await models.Like.create({
+                UserId: userId,
+                PostId: postId,
+                CommentId: commentId,
+            });
+        },
+
         async login(root, { email, password }, context) {
             let user = await context.models.User.findOne({ where: { email } });
             if (!user) {
@@ -141,6 +153,13 @@ const resolvers = {
                 throw new Error("Incorrect password");
             }
             let token = jwt.sign({ userId: user.id }, process.env.SECRET_KEY);
+            //pass the token in the session table
+            await context.models.Session.create({
+                sid: token,
+                expires: new Date(Date.now() + 2 * 60 * 60 * 1000), // 2 hours session
+                data: JSON.stringify({ userId: user.id }),
+            });
+            //pass the token in the cookie
             context.res.cookie("token", token, { 
                 httpOnly: true,
                 maxAge: 2 * 60 * 60 * 1000 // 2 hours cookie
@@ -149,7 +168,7 @@ const resolvers = {
         },
 
         async logout(parent, args, context) {
-            context.logout();
+            context.res.clearCookie("token");
             return true;
         }
     },

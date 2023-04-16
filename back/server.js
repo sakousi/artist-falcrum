@@ -21,6 +21,19 @@ app.use(cors({
   credentials: true,
 }));
 
+
+// delete expired sessions token from the database every 5 minutes
+setInterval(() => {
+  models.Session.destroy({
+    where: {
+      expires: {
+        [models.Sequelize.Op.lt]: new Date()
+      }
+    }
+  });
+}, 300000);
+
+
 app.use(cookieParser());
 const server = new ApolloServer({
   typeDefs,
