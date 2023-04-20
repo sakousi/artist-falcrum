@@ -28,9 +28,6 @@ export const GET_LIKES = gql`
     query getLikes($postId: Int, $commentId: Int) {
         getLikes(postId: $postId, commentId: $commentId) {
             id
-            user{
-                id
-            }
             createdAt
         }
     }

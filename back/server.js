@@ -7,7 +7,6 @@ const typeDefs = require('./schema');
 const resolvers = require('./resolvers');
 const models = require('./models');
 
-
 const cors = require('cors');
 
 const PORT = process.env.PORT || 5006
