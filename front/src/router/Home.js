@@ -31,7 +31,7 @@ function Home() {
 
   return (
     <Fragment>
-      <Navigation justifySelf="flex-start" connected={currentUser?true:false}/>
+      <Navigation connected={currentUser?true:false}/>
       <Box w='full' display='flex' flexDirection='column' alignItems='center'>
         <Box w='full' display='flex' justifyContent='flex-end' maxW='4xl' py='10'>
           <Breadcrumb color='#3A5A72'>

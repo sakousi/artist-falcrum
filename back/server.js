@@ -64,7 +64,7 @@ models.sequelize.authenticate();
 models.sequelize.sync();
 
 let { dataInit } = require('./datainit.js');
-//dataInit();
+dataInit();
 
 app.get('/bla', function(req, res){
   if(req.session.page_views){

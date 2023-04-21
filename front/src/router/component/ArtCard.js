@@ -4,7 +4,6 @@ import { useMutation, useQuery } from "@apollo/client";
 import { CREATE_LIKE } from "../../graphql/mutations";
 
 export default function ArtCard({post, images, currentUser}){
-    console.log(post.id);
     const postId = post.id;
     const { loading: loadingLikes, error: errorLikes, data: dataLikes } = useQuery(GET_LIKES, { variables: { postId } });
 

@@ -4,6 +4,11 @@ export const CURRENT_USER = gql`
     query currentUser {
         currentUser {
             id
+            pseudo
+            image
+            firstname
+            lastname
+            email
         }
     }
 `;

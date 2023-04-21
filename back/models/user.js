@@ -18,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
   };
   User.init({
     pseudo: DataTypes.STRING,
+    image: DataTypes.STRING,
     email: {
         type: DataTypes.STRING,
         allowNull: false,

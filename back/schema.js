@@ -38,6 +38,7 @@ const typeDefs = gql`
     type User {
         id: Int!
         pseudo: String!
+        image: String
         email: String!
         phone: String
         firstname: String

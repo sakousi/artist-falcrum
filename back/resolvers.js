@@ -32,7 +32,6 @@ const resolvers = {
         },
 
         async getLikes (parent, { postId, commentId }, { models }){
-            console.log(postId, commentId);
             if (postId)
                 return await models.Like.findAll({ where: { postId } });
             else if (commentId)
