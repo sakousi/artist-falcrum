@@ -12,13 +12,27 @@ export default function ArtCard({post, images, currentUser}){
     if (loadingLikes) return <p>Loading...</p>;
     if (errorLikes) return <p>Error 500: An error occured while prossesing information of likes</p>;
 
-    const likes = dataLikes
+    const likes = dataLikes.getLikes
     console.log(likes);
     
     //fucntion returning the legnth of likes array
     const getCount = () => {
-        if(likes.getLikes.length === 0) return 0;
-        return likes.getLikes.length;
+        if(likes.length === 0) return 0;
+        return likes.length;
+    }
+
+    const checkLiked = (likes, user) => {
+        if (user == undefined) return false;
+        let liked = false
+        likes.forEach(like => {
+            if(user.id === like.user.id) liked = true;
+            else liked = false;
+        });
+        if(liked === true){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     return (
@@ -26,7 +40,7 @@ export default function ArtCard({post, images, currentUser}){
             <CardHeader>
                 <Heading color='#3A5A72'>{post.title}</Heading>
             </CardHeader>
-            <CardBody display='flex' flexDirection='column'>
+            <CardBody display='flex' flexDirection='column' as={'a'} href={`/post/${post.id}`}>
                 <Image
                 src={images[post.media]}
                 borderRadius='lg'
@@ -47,7 +61,7 @@ export default function ArtCard({post, images, currentUser}){
                                     }
                                 })
                             }
-                        }><i className="fa-regular fa-heart"></i></Button>
+                        }><i className={checkLiked(likes, currentUser)?'fa-solid fa-heart':'fa-regular fa-heart'}></i></Button>
                         <Button backgroundColor='#FFFFFF'><i className="fa-regular fa-comment"></i></Button>
                         <Button backgroundColor='#FFFFFF'><i className="fa-regular fa-bookmark"></i></Button>
                     </Box>

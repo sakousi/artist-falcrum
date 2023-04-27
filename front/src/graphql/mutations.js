@@ -35,3 +35,11 @@ export const CREATE_LIKE = gql`
         }
     }
 `;
+
+export const CREATE_COMMENT = gql`
+    mutation createComment($content: String!, $userId: Int!, $postId: Int!) {
+        createComment(content: $content, userId: $userId, postId: $postId) {
+            id
+        }
+    }
+`;

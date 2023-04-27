@@ -3,8 +3,8 @@ const { Model } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
     class Category extends Model {
         static associate(models) {
-            Category.hasMany(models.Post, {allowNull: false});
-            Category.hasMany(models.User, {allowNull: false});
+            Category.belongsToMany(models.Post, {through: 'postHasCategory', allowNull: false});
+            Category.belongsToMany(models.User, {through: 'userHasCategory', allowNull: false});
         }
     }
     Category.init({

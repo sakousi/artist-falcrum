@@ -5,6 +5,7 @@ import Login from "./router/Login";
 import Logout from "./router/Logout";
 import Profil from "./router/Profil";
 import Register from "./router/Register";
+import Post from "./router/Post";
 
 class App extends React.Component {
   render() {
@@ -13,6 +14,7 @@ class App extends React.Component {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home/>} />
+          <Route path="/post/:postId" element={<Post/>} />
           <Route path="/login" element={<Login/>} />
           <Route path="/register" element={<Register/>} />
           <Route path="/profil" element={connected?<Profil/>:<Navigate to="/login"/>} />

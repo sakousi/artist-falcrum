@@ -7,7 +7,7 @@ const argon2 = require("argon2");
 let users = [
     {
     pseudo: "admin",
-    image: "admin.jpg",
+    image: "admin.png",
     email: "admin@localhost.fr",
     phone: "0637407966",
     firstname: "admin",

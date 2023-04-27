@@ -4,14 +4,16 @@ const typeDefs = gql`
     type Query {
         currentUser: User
 
-        user(id: Int!): User
-        users: [User!]!
-        getUser(name: String!): User
+        getUser(id: Int!): User
+        getUsers: [User!]!
+        getUserByName(name: String!): User
 
         getPost(id: Int!): Post!
         getPosts: [Post!]!
 
         getLikes(postId: Int, commentId: Int): [Like!]!
+
+        getComments(postId: Int!): [Comment!]!
     }
 
     type Mutation {
@@ -44,9 +46,9 @@ const typeDefs = gql`
         firstname: String
         lastname: String
         password: String!
-        posts: [Post]!
-        comments: [Comment]!
-        likes: [Like]!
+        posts: [Post!]!
+        comments: [Comment!]!
+        likes: [Like!]!
         categories: [Category]!
         userBadges: [UserBadge]!
     }
@@ -56,15 +58,18 @@ const typeDefs = gql`
         title: String!
         content: String!
         media: String!
+        user: User!
         createdAt: String!
         likes: [Like]
     }
 
     type Comment {
         id: Int!
+        user: User!
+        post: Post!
         content: String!
         createdAt: String!
-        likes: [Like!]!
+        likes: [Like!]
     }
 
     type Like {
@@ -90,6 +95,12 @@ const typeDefs = gql`
     type Badge {
         id: Int!
         name: String!
+    }
+
+    type Session {
+        sid : String!
+        data : String!
+        expires : String!
     }
 
 

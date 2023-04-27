@@ -63,7 +63,7 @@ const bodyParser = require('body-parser');
 models.sequelize.authenticate();
 models.sequelize.sync();
 
-let { dataInit } = require('./datainit.js');
+let { dataInit } = require('./dataInit.js');
 dataInit();
 
 app.get('/bla', function(req, res){

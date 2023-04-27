@@ -1,4 +1,4 @@
-'use strict'; // This is the main file for the GraphQL server
+'use strict'; // This is the main file for the Sequelize server
 
 const fs = require('fs');
 const path = require('path');

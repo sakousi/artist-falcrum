@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(models.Post, {allowNull: false});
       User.hasMany(models.Comment, {allowNull: false});
       User.hasMany(models.Like, {allowNull: false});
-      User.hasMany(models.Category, {allowNull: false});
+      User.belongsToMany(models.Category, {through: 'userHasCategory' ,allowNull: false});
       User.hasMany(models.UserBadge, {allowNull: false});
     }
   };

@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
   };
   Session.init({
     sid: {
-        type: DataTypes.STRING(255),
+        type: DataTypes.STRING(180),
         primaryKey: true,
     },
     expires: DataTypes.DATE,

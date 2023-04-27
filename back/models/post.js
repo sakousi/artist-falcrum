@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
         Post.belongsTo(models.User, {allowNull: false});
         Post.hasMany(models.Comment, {allowNull: true});
         Post.hasMany(models.Like);
-        Post.hasMany(models.Category);
+        Post.belongsToMany(models.Category, {through: 'postHasCategory'});
     }
   };
   Post.init({

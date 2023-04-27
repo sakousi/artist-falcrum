@@ -13,9 +13,9 @@ export const CURRENT_USER = gql`
     }
 `;
 
-export const POSTS = gql`
-    query getPosts {
-        getPosts {
+export const POST = gql`
+    query getPost($id: Int!) {
+        getPost(id: $id) {
             id
             title
             content
@@ -29,11 +29,49 @@ export const POSTS = gql`
     }
 `;
 
+export const POSTS = gql`
+    query getPosts {
+        getPosts {
+            id
+            title
+            content
+            media
+            user {
+                id
+                pseudo
+                image
+            }
+            createdAt
+            likes {
+                id
+                createdAt
+            }
+        }
+    }
+`;
+
 export const GET_LIKES = gql`
     query getLikes($postId: Int, $commentId: Int) {
         getLikes(postId: $postId, commentId: $commentId) {
             id
+            user{
+                id
+            }
             createdAt
+        }
+    }
+`;
+
+export const COMMENTS = gql`
+    query getComments($postId: Int!) {
+        getComments(postId: $postId) {
+            id
+            content
+            createdAt
+            likes {
+                id
+                createdAt
+            }
         }
     }
 `;

@@ -17,13 +17,13 @@ const resolvers = {
             }
         },
 
-        async user(root, { id }, { models }) {
+        async getUser(root, { id }, { models }) {
             return await models.User.findByPk(id);
         },
-        async users(root, args, { models }) {
+        async getUsers(root, args, { models }) {
             return await models.User.findAll();
         },
-        async getUser(root, { name }, { models }) {
+        async getUserByName(root, { name }, { models }) {
             return await models.User.findOne({ where: { pseudo: name } });
         },
         
@@ -31,11 +31,22 @@ const resolvers = {
             return await models.Post.findAll();
         },
 
+        async getPost(parent, { id }, { models }){
+            return await models.Post.findByPk(id);
+        },
+
         async getLikes (parent, { postId, commentId }, { models }){
-            if (postId)
-                return await models.Like.findAll({ where: { postId } });
+            if (postId){
+                let likes = await models.Like.findAll({ where: { postId } });
+                console.log(likes);
+                return likes;
+            }
             else if (commentId)
                 return await models.Like.findAll({ where: { commentId } });
+        },
+
+        async getComments (parent, { postId }, { models }){
+            return await models.Comment.findAll({ where: { postId } });
         },
     },
 
@@ -183,6 +194,26 @@ const resolvers = {
             return await user.getLikes();
         }
     },
+
+    Post: {
+        async user(post) {
+            return await post.getUser();
+        }
+    },
+
+    Comment: {
+        async user(comment) {
+            return await comment.getUser();
+        }
+    },
+
+    Like: {
+        async user(like) {
+            return await like.getUser();
+        }
+    },
+
+
 };
 
 module.exports = resolvers
