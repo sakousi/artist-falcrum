@@ -11,6 +11,7 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
+    "formik": "^2.2.9",
     "framer-motion": "^6.5.1",
     "graphql": "^16.6.0",
     "react": "^18.2.0",
@@ -26,9 +27,6 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -42,7 +40,7 @@
     ]
   },
   "devDependencies": {
-    "eslint": "^8.35.0",
+    "eslint": "^8.39.0",
     "eslint-plugin-react": "^7.32.2"
   },
   "proxy": "http://localhost:5006"

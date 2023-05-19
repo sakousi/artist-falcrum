@@ -3,6 +3,7 @@ import React, { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
 import App from './App';
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client"
+import FunctionContextProvider from './context/functionContext';
 
  const client = new ApolloClient({
   uri: '/graphql',
@@ -26,7 +27,9 @@ root.render(
     <ColorModeScript />
       <ChakraProvider theme={theme}>
         <ApolloProvider client={client}>
-          <App client={client}/>
+          <FunctionContextProvider>
+            <App client={client}/>
+          </FunctionContextProvider>
         </ApolloProvider>
       </ChakraProvider>
   </StrictMode>

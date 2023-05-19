@@ -13,6 +13,68 @@ export const CURRENT_USER = gql`
     }
 `;
 
+export const USER = gql`
+    query getUser($id: Int!) {
+        getUser(id: $id) {
+            id
+            pseudo
+            image
+            firstname
+            lastname
+            email
+            posts {
+                id
+                title
+                content
+                media
+                createdAt
+                likes {
+                    id
+                    createdAt
+                }
+            }
+            comments {
+                id
+                content
+                createdAt
+                likes {
+                    id
+                    createdAt
+                }
+            }
+            likes {
+                id
+                createdAt
+            }
+            categories {
+                id
+                name
+            }
+            userBadges {
+                id
+                createdAt
+                badge {
+                    id
+                    name
+                }
+            }
+        }
+    }
+`;
+
+export const USERS = gql`
+    query getUsers($pseudo: String) {
+        getUsersByName(pseudo: $pseudo) {
+            id
+            pseudo
+            image
+            firstname
+            lastname
+            email
+        }
+    }
+`;
+
 export const POST = gql`
     query getPost($id: Int!) {
         getPost(id: $id) {
@@ -44,6 +106,9 @@ export const POSTS = gql`
             createdAt
             likes {
                 id
+                user{
+                    id
+                }
                 createdAt
             }
         }

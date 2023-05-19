@@ -46,11 +46,10 @@ export default function Post() {
 
     return (
         <Fragment>
-            <Navigation connected={currentUser?true:false} />
             <Box as="section" display={'grid'} gap={5} gridTemplateColumns={'repeat(2, 1fr)'} mx="1.5rem">
                 <Box placeSelf={'center'} w='full'>
-                    <h1>{post.title}</h1>
-                    <p>{post.content}</p>
+                    <Heading as='h1'>{post.title}</Heading>
+                    <Text>{post.content}</Text>
                     <Box p='1' w='full' display='flex' justifyContent='space-between'>
                         <Box display='grid' gridTemplateColumns='repeat(3 , 1fr)' gap='1'>
                             <Button backgroundColor='#E4E4E4' onClick={

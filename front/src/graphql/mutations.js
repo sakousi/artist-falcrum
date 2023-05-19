@@ -43,3 +43,11 @@ export const CREATE_COMMENT = gql`
         }
     }
 `;
+
+export const CREATE_POST = gql`
+    mutation createPost($title: String!, $content: String!, $media: String!, $userId: Int!) {
+        createPost(title: $title, content: $content, media: $media, userId: $userId) {
+            id
+        }
+    }
+`;

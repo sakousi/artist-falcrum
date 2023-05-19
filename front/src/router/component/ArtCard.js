@@ -1,19 +1,23 @@
-import { Box, Button, Card, CardBody, CardFooter, CardHeader, Heading, Image, Text } from "@chakra-ui/react";
+import { Avatar, Box, Button, Card, CardBody, CardFooter, CardHeader, Heading, Image, Link, Text } from "@chakra-ui/react";
 import { GET_LIKES } from "../../graphql/queries";
 import { useMutation, useQuery } from "@apollo/client";
 import { CREATE_LIKE } from "../../graphql/mutations";
+import { FunctionContext } from "../../context/functionContext";
+import { useContext } from "react";
+import PageLoader from "../PageLoader";
 
-export default function ArtCard({post, images, currentUser}){
+
+
+export default function ArtCard({post, currentUser}){
     const postId = post.id;
-    const { loading: loadingLikes, error: errorLikes, data: dataLikes } = useQuery(GET_LIKES, { variables: { postId } });
 
-    const [addLike, { loading: loadingLike, error: errorLike, data: dataLike }] = useMutation(CREATE_LIKE)
+    const functionContext = useContext(FunctionContext);
+    const postImages = functionContext.importAll(require.context('../../assets/img/posts', false, /\.(png|jpe?g|svg)$/));
+    const profilImages = functionContext.importAll(require.context('../../assets/img/profil', false, /\.(png|jpe?g|svg)$/));
 
-    if (loadingLikes) return <p>Loading...</p>;
-    if (errorLikes) return <p>Error 500: An error occured while prossesing information of likes</p>;
+    const [addLike] = useMutation(CREATE_LIKE)
 
-    const likes = dataLikes.getLikes
-    console.log(likes);
+    const likes = post.likes
     
     //fucntion returning the legnth of likes array
     const getCount = () => {
@@ -37,12 +41,16 @@ export default function ArtCard({post, images, currentUser}){
 
     return (
         <Card backgroundColor='#EEEEEE' w='lg' mb={10}>
-            <CardHeader>
+            <CardHeader display={'flex'} justifyContent={'space-between'}>
                 <Heading color='#3A5A72'>{post.title}</Heading>
+                <Link href={`profil/${post.user.id}`} display={'flex'} alignItems={'center'} gap={1}>
+                    <Avatar src={profilImages[post.user.image]}/>
+                    <Text textTransform={'capitalize'}>{post.user.pseudo}</Text>
+                </Link>
             </CardHeader>
             <CardBody display='flex' flexDirection='column' as={'a'} href={`/post/${post.id}`}>
                 <Image
-                src={images[post.media]}
+                src={postImages[post.media]}
                 borderRadius='lg'
                 />
                 <Text>{post.content}</Text>

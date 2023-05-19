@@ -1,4 +1,6 @@
-const express = require('express');const { graphqlHTTP } = require('express-graphql');
+const express = require('express');
+const { graphqlHTTP } = require('express-graphql');
+const { graphqlUploadExpress } = require('graphql-upload');
 const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
 
@@ -16,9 +18,12 @@ let app = express();
 
 app.set('trust proxy', process.env.NODE_ENV !== 'production')
 
-app.use(cors({
-  credentials: true,
-}));
+app.use(
+  graphqlUploadExpress,
+  cors({
+    credentials: true,
+  })
+);
 
 
 // delete expired sessions token from the database every 5 minutes
@@ -34,6 +39,7 @@ setInterval(() => {
 
 
 app.use(cookieParser());
+
 const server = new ApolloServer({
   typeDefs,
   resolvers,
@@ -65,16 +71,6 @@ models.sequelize.sync();
 
 let { dataInit } = require('./dataInit.js');
 dataInit();
-
-app.get('/bla', function(req, res){
-  if(req.session.page_views){
-     req.session.page_views++;
-     res.send("You visited this page " + req.session.page_views + " times");
-  } else {
-     req.session.page_views = 1;
-     res.send("Welcome to this page for the first time!");
-  }
-});
 
 server.applyMiddleware({ app, cors: false });
 

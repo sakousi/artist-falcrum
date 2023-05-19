@@ -12,10 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "argon2": "^0.30.3",
-    "concurrently": "^7.6.0",
-    "graphql-passport": "^0.6.5",
-    "passport": "^0.6.0"
+    "concurrently": "^7.6.0"
   },
   "proxy": "http://localhost:5006"
 }

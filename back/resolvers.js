@@ -1,13 +1,16 @@
 const argon2 = require("argon2");
 const jwt = require("jsonwebtoken");
+const { GraphQLUpload } = require('graphql-upload');
 
 require("dotenv").config();
-console.log(process.env.SECRET_KEY, 'hi');
 
 const resolvers = {
+    Upload: GraphQLUpload,
+
     Query: {
         async currentUser(parent, args, {req, res, models}) {
             const token = req.cookies['token']
+            console.log(token)
             if (token) {
                 const session = await models.Session.findByPk(token);
                 if (session) {
@@ -26,6 +29,9 @@ const resolvers = {
         async getUserByName(root, { name }, { models }) {
             return await models.User.findOne({ where: { pseudo: name } });
         },
+        async getUsersByName(root, { pseudo }, { models }) {
+            return await models.User.findAll({ where: { pseudo: { [models.Sequelize.Op.substring]: pseudo }}});
+        },
         
         async getPosts(parent, args, { models }){
             return await models.Post.findAll();
@@ -38,7 +44,6 @@ const resolvers = {
         async getLikes (parent, { postId, commentId }, { models }){
             if (postId){
                 let likes = await models.Like.findAll({ where: { postId } });
-                console.log(likes);
                 return likes;
             }
             else if (commentId)
@@ -87,18 +92,29 @@ const resolvers = {
             });
         },
 
-        async createPost(root, { title, content, userId }, { models }) {
+        async createPost(root, { title, content, media, userId }, { models }) {
+            //save the file in the server
+            const { createReadStream, filename } = await media;
+
+            const stream = createReadStream();
+            const out = require('fs').createWriteStream('./src/assets/img/posts' + filename);
+
+            stream.pipe(out);
+            stream.on('end', () => console.log('Done uploading!'));
+
             return await models.Post.create({
                 title,
                 content,
+                filename,
                 userId,
             });
         },
-        async updatePost(root, { id, title, content, userId }, { models }) {
+        async updatePost(root, { id, title, content, media, userId }, { models }) {
             return await models.Post.update(
                 {
                     title,
                     content,
+                    media,
                     userId,
                 },
                 {
@@ -192,12 +208,18 @@ const resolvers = {
         },
         async likes(user) {
             return await user.getLikes();
+        },
+        async categories(user) {
+            return await user.getCategories();
         }
     },
 
     Post: {
         async user(post) {
             return await post.getUser();
+        },
+        async likes(post) {
+            return await post.getLikes();
         }
     },
 
