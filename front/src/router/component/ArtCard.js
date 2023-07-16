@@ -1,11 +1,8 @@
-import { Avatar, Box, Button, Card, CardBody, CardFooter, CardHeader, Heading, Image, Link, Text } from "@chakra-ui/react";
-import { GET_LIKES } from "../../graphql/queries";
-import { useMutation, useQuery } from "@apollo/client";
+import { Avatar, Box, Button, Card, CardBody, CardFooter, CardHeader, Heading, Image, Link, Stack, Text } from "@chakra-ui/react";
+import { useMutation } from "@apollo/client";
 import { CREATE_LIKE } from "../../graphql/mutations";
 import { FunctionContext } from "../../context/functionContext";
 import { useContext } from "react";
-import PageLoader from "../PageLoader";
-
 
 
 export default function ArtCard({post, currentUser}){
@@ -40,44 +37,52 @@ export default function ArtCard({post, currentUser}){
     }
 
     return (
-        <Card backgroundColor='#EEEEEE' w='lg' mb={10}>
-            <CardHeader display={'flex'} justifyContent={'space-between'}>
-                <Heading color='#3A5A72'>{post.title}</Heading>
-                <Link href={`profil/${post.user.id}`} display={'flex'} alignItems={'center'} gap={1}>
-                    <Avatar src={profilImages[post.user.image]}/>
-                    <Text textTransform={'capitalize'}>{post.user.pseudo}</Text>
+        <Card backgroundColor='#EEEEEE' w='5xl' mb={10} display='grid' gridTemplateColumns='repeat(2, 1fr)'>
+            <Stack>
+                <CardBody display='flex' flexDirection='column'>
+                    <Link href={`profil/${post.user.id}`} display={'flex'} alignItems={'center'} gap={1}>
+                        <Avatar src={profilImages[post.user.image]}/>
+                        <Text textTransform={'capitalize'}>{post.user.pseudo}</Text>
+                    </Link>
+                    <Heading color='#3A5A72'>{post.title}</Heading>
+                    <Text>{post.content}</Text>
+                </CardBody>
+                <CardFooter display='flex' flexDirection='column'>
+                    <Text>{getCount()} Likes</Text>
+                    <Box p='1' w='full' display='flex' justifyContent='space-between'>
+                        <Box display='grid' gridTemplateColumns='repeat(3 , 1fr)' gap='1'>
+                            <Button backgroundColor='#FFFFFF' onClick={
+                                () => {
+                                    if(!currentUser) return alert('You must be connected to like a post');
+                                    addLike({
+                                        variables: {
+                                            userId: currentUser.id,
+                                            postId: post.id
+                                        }
+                                    })
+                                }
+                            }><i className={checkLiked(likes, currentUser)?'fa-solid fa-heart':'fa-regular fa-heart'}></i></Button>
+                            <Button backgroundColor='#FFFFFF'><i className="fa-regular fa-comment"></i></Button>
+                            <Button backgroundColor='#FFFFFF'><i className="fa-regular fa-bookmark"></i></Button>
+                        </Box>
+                        <Box>
+                            <Button backgroundColor='#FFFFFF'><i className="fa-solid fa-exclamation"></i></Button>
+                        </Box>
+                    </Box>
+                </CardFooter>
+            </Stack>
+            <Box
+            _hover={{
+                backgroundColor: '#FFFFFF'
+            }}
+            >
+                <Link href={`post/${post.id}`}>
+                    <Image
+                    src={postImages[post.media]}
+                    borderRadius='lg'
+                    />
                 </Link>
-            </CardHeader>
-            <CardBody display='flex' flexDirection='column' as={'a'} href={`/post/${post.id}`}>
-                <Image
-                src={postImages[post.media]}
-                borderRadius='lg'
-                />
-                <Text>{post.content}</Text>
-            </CardBody>
-            <CardFooter display='flex' flexDirection='column'>
-                <Text>{getCount()} Likes</Text>
-                <Box p='1' w='full' display='flex' justifyContent='space-between'>
-                    <Box display='grid' gridTemplateColumns='repeat(3 , 1fr)' gap='1'>
-                        <Button backgroundColor='#FFFFFF' onClick={
-                            () => {
-                                if(!currentUser) return alert('You must be connected to like a post');
-                                addLike({
-                                    variables: {
-                                        userId: currentUser.id,
-                                        postId: post.id
-                                    }
-                                })
-                            }
-                        }><i className={checkLiked(likes, currentUser)?'fa-solid fa-heart':'fa-regular fa-heart'}></i></Button>
-                        <Button backgroundColor='#FFFFFF'><i className="fa-regular fa-comment"></i></Button>
-                        <Button backgroundColor='#FFFFFF'><i className="fa-regular fa-bookmark"></i></Button>
-                    </Box>
-                    <Box>
-                        <Button backgroundColor='#FFFFFF'><i className="fa-solid fa-exclamation"></i></Button>
-                    </Box>
-                </Box>
-            </CardFooter>
+            </Box>
         </Card>
     )
 }

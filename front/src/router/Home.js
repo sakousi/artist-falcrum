@@ -29,7 +29,7 @@ function Home() {
 
   return (
     <Fragment>
-      <Box w='full' display='flex' flexDirection='column' alignItems='center'>
+      <Box w='full' display='flex' flexDirection='column' justifyContent='center' alignItems='center'>
         <Box w='full' display='flex' justifyContent='flex-end' maxW='4xl' py='10'>
           <Breadcrumb color='#3A5A72'>
             <BreadcrumbItem>

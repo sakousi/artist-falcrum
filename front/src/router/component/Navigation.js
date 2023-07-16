@@ -15,7 +15,9 @@ function Navigation({connected}) {
     const { colorMode } = useColorMode();
 
     const { isOpen, onToggle, onClose } = useDisclosure();
-    const [search, setSearch] = useState('')
+
+    const [search, setSearch] = useState([])
+
 
     //use state to set dark mode
     const [darkMode, setDarkMode] = useState(false);
@@ -50,7 +52,7 @@ function Navigation({connected}) {
     
     return (
         <Box as='nav' backgroundColor="#83a697" color='#FFFFFF' h='4rem' display="grid" alignContent={'center'}  gridTemplateColumns={'repeat(3, 1fr)'} pr='.5rem'>
-            <Link p='.5rem' h='full' w='3.5rem' href="/">
+            <Link p='.5rem' h='full' w='6rem' href="/">
                 <Image h='full' src={logoDark} alt="je suis le logo lelolel"/>
             </Link>
             <Box alignSelf={'center'}>
@@ -62,7 +64,7 @@ function Navigation({connected}) {
                 >
                     <PopoverTrigger>
                         <InputGroup backgroundColor={'#FFF'} borderRadius={'.5rem'}>
-                            <Input type='text' color={'#000'} value={search} variant={'filled'} onChange={e => setSearch(e.target.value)} placeholder='Search user'/>
+                            <Input type='text' color={'#000'} value={search} variant={'filled'} onChange={e => setSearch(e.target.value)} placeholder='Search user...'/>
                             <Button onClick={e => {
                                 seachUser();
                                 onToggle()

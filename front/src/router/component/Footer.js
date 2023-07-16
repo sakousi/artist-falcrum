@@ -8,11 +8,7 @@ export default function Footer() {
         <Box w='full' backgroundColor='#83a697' p='1rem 5rem' color='#fff'>
             <Box display='flex' justifyContent='space-between'>
                 <Box display='flex' alignItems='center'>
-                    <Image w='4rem' src={logo} />
-                    <Box fontSize='1.5rem'>
-                        <Text>Artist</Text>
-                        <Text>Falcrum</Text>
-                    </Box>
+                    <Image w='8rem' src={logo} />
                 </Box>
                 <List display='flex' flexDirection='column'>
                     <ListItem>

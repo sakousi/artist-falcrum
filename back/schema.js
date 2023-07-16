@@ -25,7 +25,7 @@ const typeDefs = gql`
         updateUser(id: Int!, pseudo: String!, email: String!, phone: String!, firstname: String!, lastname: String!, password: String!): User
         deleteUser(id: Int!): User
 
-        createPost(title: String!, content: String!, media: Upload!, userId: Int!): Post
+        createPost(title: String!, content: String!, media: String!, userId: Int!): Post
         updatePost(id: Int!, title: String!, content: String!, userId: Int!): Post
         deletePost(id: Int!): Post
 
@@ -37,8 +37,6 @@ const typeDefs = gql`
         updateLike(id: Int!, userId: Int!, postId: Int, commentId: Int): Like
         deleteLike(id: Int!): Like
     }
-
-    scalar Upload
 
     type User {
         id: Int!
@@ -104,12 +102,6 @@ const typeDefs = gql`
         sid : String!
         data : String!
         expires : String!
-    }
-
-    type File {
-        filename: String!
-        mimetype: String!
-        encoding: String!
     }
 
 

@@ -2,10 +2,14 @@ import { ChakraProvider, ColorModeScript, theme } from '@chakra-ui/react';
 import React, { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
 import App from './App';
+
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client"
+const { createUploadLink } = require('apollo-upload-client')
+
 import FunctionContextProvider from './context/functionContext';
 
  const client = new ApolloClient({
+  link: createUploadLink(),
   uri: '/graphql',
   credentials: 'include',
   request: async (operation) => {

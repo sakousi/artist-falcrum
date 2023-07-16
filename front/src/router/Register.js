@@ -6,6 +6,8 @@ import { useMutation } from "@apollo/client";
 import { REGISTER } from "../graphql/mutations";
 import { useNavigate } from "react-router-dom";
 
+import * as Yup from 'yup'
+
 function Register() {
   const navigate = useNavigate();
   const [register] = useMutation(REGISTER, {
@@ -16,14 +18,27 @@ function Register() {
       navigate("/login");
     }
   });
+
+  const FormShema = Yup.object().shape({
+    pseudo: Yup.string().required('Required'),
+    firstname: Yup.string().required('Required'),
+    lastname: Yup.string().required('Required'),
+    email: Yup.string().email('Invalid email').required('Required'),
+    phone: Yup.string().required('Required'),
+    password: Yup.string().required('Required'),
+    confirmPassword: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match').required('Required')
+  })
+
+
   return (
-    <Box h='100vh'>
+    <Box>
       <Box w='full' h='max-content' display='flex' justifyContent='center' alignItems='center'>
-        <Box borderRadius='.25rem' display='flex' flexDirection="column" alignItems='center' mt='5rem' p='1rem' w='35%' backgroundColor='#EEEEEE'>
+        <Box borderRadius='.25rem' display='flex' flexDirection="column" alignItems='center' my={"1rem"} p='1rem' w='35%' backgroundColor='#EEEEEE'>
         <Text as='h1' fontFamily='Poppins' fontSize='2rem'>Register</Text>
         <Text as='h2'>Hello new artist</Text>
         <Formik
-            initialValues={{ pseudo: '', firstname: '', lastname: '', email: '', phone: '', password: '' }}
+            initialValues={{ pseudo: '', firstname: '', lastname: '', email: '', phone: '', password: '', confirmPassword: '' }}
+            validationSchema={FormShema}
             onSubmit={(values, actions) => {
               register({
                 variables: {
@@ -40,55 +55,64 @@ function Register() {
               <Form>
                 <Field name='pseudo'>
                   {({ field, form }) => (
-                    <FormControl isInvalid={form.errors.name && form.touched.name}>
+                    <FormControl isInvalid={form.errors.pseudo && form.touched.pseudo}>
                       <FormLabel>Pseudo</FormLabel>
                       <Input backgroundColor='#fff' {...field} placeholder='pseudo' />
-                      <FormErrorMessage>{form.errors.name}</FormErrorMessage>
+                      <FormErrorMessage>{form.errors.pseudo}</FormErrorMessage>
                     </FormControl>
                   )}
                 </Field>
                 <Field name='firstname'>
                   {({ field, form }) => (
-                    <FormControl isInvalid={form.errors.name && form.touched.name}>
+                    <FormControl isInvalid={form.errors.firstname && form.touched.firstname}>
                       <FormLabel>Firstname</FormLabel>
                       <Input backgroundColor='#fff' {...field} placeholder='firstname' />
-                      <FormErrorMessage>{form.errors.name}</FormErrorMessage>
+                      <FormErrorMessage>{form.errors.firstname}</FormErrorMessage>
                     </FormControl>
                   )}
                 </Field>
                 <Field name='lastname'>
                   {({ field, form }) => (
-                    <FormControl isInvalid={form.errors.name && form.touched.name}>
+                    <FormControl isInvalid={form.errors.lastname && form.touched.lastname}>
                       <FormLabel>Lastname</FormLabel>
                       <Input backgroundColor='#fff' {...field} placeholder='lastname' />
-                      <FormErrorMessage>{form.errors.name}</FormErrorMessage>
+                      <FormErrorMessage>{form.errors.lastname}</FormErrorMessage>
                     </FormControl>
                   )}
                 </Field>
                 <Field name='email'>
                   {({ field, form }) => (
-                    <FormControl isInvalid={form.errors.name && form.touched.name}>
+                    <FormControl isInvalid={form.errors.email && form.touched.email}>
                       <FormLabel>Email</FormLabel>
                       <Input backgroundColor='#fff' {...field} placeholder='email' />
-                      <FormErrorMessage>{form.errors.name}</FormErrorMessage>
+                      <FormErrorMessage>{form.errors.email}</FormErrorMessage>
                     </FormControl>
                   )}
                 </Field>
                 <Field name='phone'>
                   {({ field, form }) => (
-                    <FormControl isInvalid={form.errors.name && form.touched.name}>
+                    <FormControl isInvalid={form.errors.phone && form.touched.phone}>
                       <FormLabel>Phone</FormLabel>
                       <Input backgroundColor='#fff' {...field} placeholder='phone' />
-                      <FormErrorMessage>{form.errors.name}</FormErrorMessage>
+                      <FormErrorMessage>{form.errors.phone}</FormErrorMessage>
                     </FormControl>
                   )}
                 </Field>
                 <Field name='password'>
                   {({ field, form }) => (
-                    <FormControl isInvalid={form.errors.name && form.touched.name}>
+                    <FormControl isInvalid={form.errors.password && form.touched.password}>
                       <FormLabel>Password</FormLabel>
                       <Input backgroundColor='#fff' {...field} type="password" placeholder='password' />
-                      <FormErrorMessage>{form.errors.name}</FormErrorMessage>
+                      <FormErrorMessage>{form.errors.password}</FormErrorMessage>
+                    </FormControl>
+                  )}
+                </Field>
+                <Field name='confirmPassword'>
+                  {({ field, form }) => (
+                    <FormControl isInvalid={form.errors.confirmPassword && form.touched.confirmPassword}>
+                      <FormLabel>Confirm password</FormLabel>
+                      <Input backgroundColor='#fff' {...field} type="password" placeholder='Confirm password' />
+                      <FormErrorMessage>{form.errors.confirmPassword}</FormErrorMessage>
                     </FormControl>
                   )}
                 </Field>
@@ -103,51 +127,6 @@ function Register() {
               </Form>
             )}
           </Formik>
-        {/* <FormControl onSubmit={e => {
-          e.preventDefault();;
-          register({
-            variables: {
-              pseudo: e.target.username.value,
-              firstname: e.target.firstname.value,
-              lastname: e.target.lastname.value,
-              email: e.target.email.value,
-              phone: e.target.phone.value,
-              password: e.target.password.value,
-            }
-          })
-        }}>
-          <Box display='flex' flexDirection='column' gap={2}>
-            <Box display='flex' flexDirection='column'>
-              <label htmlFor="username">Username:</label>
-              <input type="text" name="username" id="username" placeholder="JohnDoe" />
-            </Box>
-            <Box display='flex' flexDirection='column'>
-              <label htmlFor="firstname">Firstname:</label>
-              <input type="text" name="firstname" id="firstname" placeholder="John" />
-            </Box>
-            <Box display='flex' flexDirection='column'>
-              <label htmlFor="lastname">Lastname:</label>
-              <input type="text" name="lastname" id="lastname" placeholder="Doe" />
-            </Box>
-            <Box display='flex' flexDirection='column'>
-              <label htmlFor="email">Email:</label>
-              <input type="email" name="email" id="email" placeholder="john.doe@labmda.com" />
-            </Box>
-            <Box display='flex' flexDirection='column'>
-              <label htmlFor="email">Phone:</label>
-              <input type="phone" name="phone" id="phone" placeholder="+33 7 77 77 77 77" />
-            </Box>
-            <Box display='flex' flexDirection='column'>
-              <label htmlFor="password">Password:</label>
-              <input type="password" name="password" id="password" placeholder="password1234" />
-            </Box>
-            <Box display='flex' flexDirection='column'>
-              <label htmlFor="confrim-password">Confirm Password:</label>
-              <input type="password" name="confrim-password" id="confrim-password" placeholder="password1234" />
-            </Box>
-            <Button backgroundColor='#FFFFFF' type="submit" w='fit-content' alignSelf='center'>Register</Button>
-          </Box>
-        </FormControl> */}
         </Box>
       </Box>
     </Box>

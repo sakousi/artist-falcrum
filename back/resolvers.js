@@ -1,11 +1,10 @@
 const argon2 = require("argon2");
+const fs = require("fs");
 const jwt = require("jsonwebtoken");
-const { GraphQLUpload } = require('graphql-upload');
 
 require("dotenv").config();
 
 const resolvers = {
-    Upload: GraphQLUpload,
 
     Query: {
         async currentUser(parent, args, {req, res, models}) {
@@ -93,20 +92,11 @@ const resolvers = {
         },
 
         async createPost(root, { title, content, media, userId }, { models }) {
-            //save the file in the server
-            const { createReadStream, filename } = await media;
-
-            const stream = createReadStream();
-            const out = require('fs').createWriteStream('./src/assets/img/posts' + filename);
-
-            stream.pipe(out);
-            stream.on('end', () => console.log('Done uploading!'));
-
             return await models.Post.create({
-                title,
-                content,
-                filename,
-                userId,
+              title,
+              content,
+              media,
+              userId,
             });
         },
         async updatePost(root, { id, title, content, media, userId }, { models }) {

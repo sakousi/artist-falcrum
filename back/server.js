@@ -1,30 +1,28 @@
 const express = require('express');
-const { graphqlHTTP } = require('express-graphql');
-const { graphqlUploadExpress } = require('graphql-upload');
 const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
+const multer = require('multer');
 
-const { ApolloServer } = require('apollo-server-express');
+const { ApolloServer } = require('apollo-server-express')
+
 const typeDefs = require('./schema');
 const resolvers = require('./resolvers');
 const models = require('./models');
 
 const cors = require('cors');
+dotenv.config();
 
 const PORT = process.env.PORT || 5006
 
-dotenv.config();
 let app = express();
 
 app.set('trust proxy', process.env.NODE_ENV !== 'production')
 
 app.use(
-  graphqlUploadExpress,
   cors({
     credentials: true,
   })
 );
-
 
 // delete expired sessions token from the database every 5 minutes
 setInterval(() => {
@@ -55,6 +53,7 @@ const server = new ApolloServer({
     // be manipulated in other ways, so long as it's returned.
     return err;
   },
+  uploads: false,
   playground: true, 
   tracing: true, 
   context: ({ req, res }) => ({ req, res, models }),
@@ -64,7 +63,22 @@ const server = new ApolloServer({
     },
   },
 });
-const bodyParser = require('body-parser');
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/images')
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    cb(null, `${uniqueSuffix}-${this.filename}`)
+  }
+})
+
+const upload = multer({ storage: storage })
+
+app.post('/upload', upload.single('file'), (req, res) => {
+  res.send({ filename: req.file.filename })
+})
 
 models.sequelize.authenticate();
 models.sequelize.sync();
@@ -72,7 +86,9 @@ models.sequelize.sync();
 let { dataInit } = require('./dataInit.js');
 dataInit();
 
-server.applyMiddleware({ app, cors: false });
+server.start().then(() => {
+  server.applyMiddleware({ app, cors: false });
+});
 
 if (process.env.NODE_ENV === 'production') {
   // Serve any static files
